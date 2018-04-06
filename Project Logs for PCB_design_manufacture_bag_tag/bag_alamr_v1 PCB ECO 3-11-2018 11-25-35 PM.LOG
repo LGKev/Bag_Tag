@@ -1,0 +1,6 @@
+Removed Pin From Net: NetName=NetC1_2 Pin=C12-2
+Removed Pin From Net: NetName=DC_DC_FB Pin=C15-2
+Removed Member From Class: ClassName=bag_tag_v1 Member=C12
+Removed Member From Class: ClassName=bag_tag_v1 Member=C15
+Added Pin To Net: NetName=GND Pin=C13-1
+Added Pin To Net: NetName=GND Pin=C14-1

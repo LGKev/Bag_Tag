@@ -1,0 +1,47 @@
+Change Component Designator: OldDesignator=C? NewDesignator=C3
+Change Component Designator: OldDesignator=C? NewDesignator=C4
+Change Component Designator: OldDesignator=C? NewDesignator=C5
+Change Component Designator: OldDesignator=C? NewDesignator=C6
+Change Component Designator: OldDesignator=C? NewDesignator=C7
+Change Component Designator: OldDesignator=C? NewDesignator=C8
+Change Component Designator: OldDesignator=C? NewDesignator=C9
+Change Component Designator: OldDesignator=C? NewDesignator=C10
+Change Component Designator: OldDesignator=C? NewDesignator=C11
+Change Component Designator: OldDesignator=L? NewDesignator=L2
+Change Component Designator: OldDesignator=L? NewDesignator=L3
+Change Component Designator: OldDesignator=L? NewDesignator=L4
+Change Component Designator: OldDesignator=R? NewDesignator=R2
+Change Component Designator: OldDesignator=R? NewDesignator=R3
+Change Component Designator: OldDesignator=U? NewDesignator=U2
+Change Net Name : Old Net Name=NetC?_2 New Net Name=NetC8_2
+Change Net Name : Old Net Name=NetL?_1 New Net Name=NetL2_1
+Change Net Name : Old Net Name=NetL?_2 New Net Name=NetL3_2
+Change Net Name : Old Net Name=NetR?_1 New Net Name=NetR2_1
+Added Pin To Net: NetName=NetC3_1 Pin=C3-1
+Added Pin To Net: NetName=NetC3_1 Pin=U2-19
+Added Net: Name=NetC3_1
+Added Pin To Net: NetName=NetC6_1 Pin=C6-1
+Added Pin To Net: NetName=NetC6_1 Pin=C7-1
+Added Net: Name=NetC6_1
+Added Pin To Net: NetName=NetC6_2 Pin=C6-2
+Added Pin To Net: NetName=NetC6_2 Pin=L2-2
+Added Net: Name=NetC6_2
+Added Pin To Net: NetName=NetC10_1 Pin=C10-1
+Added Pin To Net: NetName=NetC10_1 Pin=R3-1
+Added Pin To Net: NetName=NetC10_1 Pin=U2-9
+Added Net: Name=NetC10_1
+Added Pin To Net: NetName=NetC11_2 Pin=C11-2
+Added Pin To Net: NetName=NetC11_2 Pin=R3-2
+Added Pin To Net: NetName=NetC11_2 Pin=U2-10
+Added Net: Name=NetC11_2
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C3 33nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C4 10nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C5 1nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C6 1.5pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C7 1.0pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C8 2.2nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C9 4.7pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C10 15pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component L2 3.9nH
+Added Member To Class: ClassName=bag_tag_v1 Member=Component L4 3.3nH
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R2 22K

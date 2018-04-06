@@ -1,0 +1,6 @@
+Added Component: Designator=L5(PCBComponent_1)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Value"; Value = "33mH"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=L5-1
+Added Pin To Net: NetName=NetB1_2 Pin=L5-2
+Added Member To Class: ClassName=bag_tag_v1 Member=Component L5 33mH

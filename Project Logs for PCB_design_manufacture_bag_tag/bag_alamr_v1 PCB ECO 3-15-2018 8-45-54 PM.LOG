@@ -1,0 +1,52 @@
+Removed Pin From Net: NetName=NetC10_1 Pin=Y1-1
+Removed Pin From Net: NetName=GND Pin=Y1-2
+Removed Pin From Net: NetName=NetC11_2 Pin=Y1-3
+Removed Pin From Net: NetName=GND Pin=Y1-4
+Removed Member From Class: ClassName=bag_tag_v1 Member=ant1
+Removed Member From Class: ClassName=bag_tag_v1 Member=Y1
+Added Component: Designator=16Mhz_smd(OSCCC200X160X50)
+Add component. Clean all parameters for all variants
+Added Component: Designator=Q?(SOT23)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Availability"; Value = "Good"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "ON Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "MMBT2222A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOT-23 ON Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.06 USD"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=Q(SOT95P240X110-3N)
+Add component. Clean all parameters for all variants
+Added Component: Designator=Y?(OSCSC320X250X100N)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Availability"; Value = "Good"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Abracon"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ABM8G-48.000MHZ-B4Y-T"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SMD-4 Abracon"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.58 USD"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = "16Mhz"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=VDD Pin=C16-2
+Added Pin To Net: NetName=MISO Pin=J1-1
+Added Pin To Net: NetName=SCK Pin=J1-3
+Added Pin To Net: NetName=MOSI Pin=J1-4
+Added Pin To Net: NetName=VDD Pin=R4-2
+Added Pin To Net: NetName=VDD Pin=U3-3
+Added Pin To Net: NetName=IRQ Pin=U3-10
+Added Pin To Net: NetName=CE Pin=U3-11
+Added Pin To Net: NetName=CSN Pin=U3-12
+Added Pin To Net: NetName=MOSI Pin=U3-13
+Added Pin To Net: NetName=MISO Pin=U3-14
+Added Pin To Net: NetName=SCK Pin=U3-15
+Change Net Name : Old Net Name=VDD New Net Name=3.3V
+Added Pin To Net: NetName=NetU3_19 Pin=U3-19
+Added Pin To Net: NetName=NetU3_19 Pin=U4-12
+Added Net: Name=NetU3_19
+Added Pin To Net: NetName=NetU3_20 Pin=U3-20
+Added Pin To Net: NetName=NetU3_20 Pin=U4-10
+Added Net: Name=NetU3_20
+Added Pin To Net: NetName=NetU3_21 Pin=U3-21
+Added Pin To Net: NetName=NetU3_21 Pin=U4-8
+Added Net: Name=NetU3_21
+Added Member To Class: ClassName=bag_tag_v1 Member=Component 16Mhz_smd FA238
+Added Member To Class: ClassName=bag_tag_v1 Member=Component Q? MMBT2222A
+Added Member To Class: ClassName=bag_tag_v1 Member=Component Q ah180N
+Added Member To Class: ClassName=bag_tag_v1 Member=Component Y? ABM8G-48.000MHZ-B4Y-T

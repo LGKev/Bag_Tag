@@ -1,0 +1,26 @@
+Removed Pin From Net: NetName=NetC10_1 Pin=C10-1
+Removed Pin From Net: NetName=GND Pin=C10-2
+Removed Pin From Net: NetName=NetC10_1 Pin=C11-1
+Removed Pin From Net: NetName=GND Pin=C11-2
+Removed Member From Class: ClassName=bag_tag_v1 Member=C10
+Removed Member From Class: ClassName=bag_tag_v1 Member=C11
+Change Component Footprint: Designator=C5 Old Footprint=CAP 0603/1608 New Footprint=CAP 0805/2012
+Change Component Footprint: Designator=C16 Old Footprint=CAP 0603/1608 New Footprint=CAP 0805/2012
+Change Component Comment : Designator=C5 Old Comment=0.1uF New Comment=10uF
+Change Component Comment : Designator=C16 Old Comment=0.1uF New Comment=10uF
+Change component parameters: Designator = "C5"; Footprint = "CAP 0805/2012"; UniqueID = "\HWHQMINV"
+Change component parameters. Clean all parameters for all variants
+Change component parameters (AddParameter): Name = "Part Number"; Value = "C2012X7R0J106K125AB"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Value"; Value = "10uF"; VariantName = "[No Variations]"
+Change component parameters: Designator = "C16"; Footprint = "CAP 0805/2012"; UniqueID = "\TVSBWTOJ"
+Change component parameters. Clean all parameters for all variants
+Change component parameters (AddParameter): Name = "Part Number"; Value = "C2012X7R0J106K125AB"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Value"; Value = "10uF"; VariantName = "[No Variations]"
+Added Component: Designator=C?(CAP 0805/2012)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Number"; Value = "C2012X7R0J106K125AB"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = "10uF"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=C?-1
+Added Pin To Net: NetName=NetC10_1 Pin=C?-2
+Change Net Name : Old Net Name=NetC10_1 New Net Name=NetC?_2
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 10uF

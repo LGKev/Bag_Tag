@@ -1,0 +1,17 @@
+Added Component: Designator=AE?(XCVR_2450AT42B100E)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Availability"; Value = "Good"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Johanson"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "2450AT42B100E"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.45 USD"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/symbols-footprints/2450AT42B100E/Johanson/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Pin To Net: NetName=NetAE?_1 Pin=AE?-1
+Added Pin To Net: NetName=NetAE?_1 Pin=C6-1
+Added Pin To Net: NetName=NetAE?_1 Pin=C7-1
+Added Net: Name=NetAE?_1
+Added Member To Class: ClassName=bag_tag_v1 Member=Component AE? 2450AT42B100E
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R? 0.0
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R? 0.0
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R? 0.0

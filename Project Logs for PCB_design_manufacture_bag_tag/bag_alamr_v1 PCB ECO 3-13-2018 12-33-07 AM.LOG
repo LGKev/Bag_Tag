@@ -1,0 +1,17 @@
+Change Component Designator: OldDesignator=AE? NewDesignator=AE1
+Change Component Designator: OldDesignator=B? NewDesignator=B1
+Change Component Designator: OldDesignator=R? NewDesignator=R1
+Change Component Designator: OldDesignator=R? NewDesignator=R4
+Change Component Designator: OldDesignator=R? NewDesignator=R5
+Change Component Designator: OldDesignator=R? NewDesignator=R6
+Change Net Name : Old Net Name=NetAE?_1 New Net Name=NetAE1_1
+Change Net Name : Old Net Name=NetR?_2 New Net Name=NetR6_2
+Added Pin To Net: NetName=NetR1_2 Pin=R1-2
+Added Pin To Net: NetName=NetR1_2 Pin=U1-3
+Added Net: Name=NetR1_2
+Added Pin To Net: NetName=NetR5_2 Pin=R5-2
+Added Pin To Net: NetName=NetR5_2 Pin=U4-7
+Added Net: Name=NetR5_2
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R4 0.0
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R5 0.0
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R6 0.0

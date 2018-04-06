@@ -1,0 +1,5 @@
+Added Component: Designator=J?(2X3-NS)
+Add component. Clean all parameters for all variants
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 10uF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component J? AVR ISP 6 Pin  
+Added Member To Class: ClassName=bag_tag_v1 Member=Component U? ATtiny84-20MU

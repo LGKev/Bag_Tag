@@ -1,0 +1,16 @@
+Added Component: Designator=U?(QFN50P200X200X100-12N)
+Add component. Clean all parameters for all variants
+Added Component: Designator=Y?(OSCSC320X250X100N)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Availability"; Value = "Good"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Abracon"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ABM8G-48.000MHZ-B4Y-T"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SMD-4 Abracon"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.58 USD"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Pin To Net: NetName=NetC10_1 Pin=Y?-1
+Added Pin To Net: NetName=GND Pin=Y?-2
+Added Pin To Net: NetName=NetC11_2 Pin=Y?-3
+Added Pin To Net: NetName=GND Pin=Y?-4
+Added Member To Class: ClassName=bag_tag_v1 Member=Component U? ACCL
+Added Member To Class: ClassName=bag_tag_v1 Member=Component Y? ABM8G-48.000MHZ-B4Y-T

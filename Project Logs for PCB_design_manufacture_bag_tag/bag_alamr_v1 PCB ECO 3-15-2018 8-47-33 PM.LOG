@@ -1,0 +1,6 @@
+Added Pin To Net: NetName=NetC10_1 Pin=16Mhz_smd-1
+Added Pin To Net: NetName=GND Pin=16Mhz_smd-2
+Added Pin To Net: NetName=NetC11_2 Pin=16Mhz_smd-3
+Added Pin To Net: NetName=GND Pin=16Mhz_smd-4
+Change Net Name : Old Net Name=NetC10_1 New Net Name=Net16Mhz_smd_1
+Change Net Name : Old Net Name=NetC11_2 New Net Name=Net16Mhz_smd_3

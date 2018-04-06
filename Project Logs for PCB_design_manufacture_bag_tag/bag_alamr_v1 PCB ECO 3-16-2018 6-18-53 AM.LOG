@@ -1,0 +1,13 @@
+Removed Pin From Net: NetName=HeartBeat_LED Pin=C10-1
+Removed Pin From Net: NetName=HeartBeat_LED Pin=C11-1
+Removed Pin From Net: NetName=GND Pin=R13-2
+Removed Pin From Net: NetName=HeartBeat_LED Pin=U3-7
+Removed Pin From Net: NetName=HeartBeat_LED Pin=U3-15
+Removed Pin From Net: NetName=HeartBeat_LED Pin=U3-18
+Removed Member From Class: ClassName=bag_tag_v1 Member=R13
+Added Pin To Net: NetName=NetC10_1 Pin=C10-1
+Added Pin To Net: NetName=NetC10_1 Pin=C11-1
+Added Pin To Net: NetName=NetC10_1 Pin=U3-7
+Added Pin To Net: NetName=NetC10_1 Pin=U3-15
+Added Pin To Net: NetName=NetC10_1 Pin=U3-18
+Added Net: Name=NetC10_1

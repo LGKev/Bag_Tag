@@ -1,0 +1,5 @@
+Removed Pin From Net: NetName=HeartBeat_LED Pin=R2-1
+Added Pin To Net: NetName=led0_digital_2 Pin=R2-1
+Added Pin To Net: NetName=led0_digital_2 Pin=U4-28
+Added Net: Name=led0_digital_2
+Added Member To Class: ClassName=bag_tag_v1 Member=Component 1 FA238

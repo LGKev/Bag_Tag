@@ -1,0 +1,8 @@
+Change Physical Footprint: Designator=* Old Footprint=6mm tactile New Footprint=6mm tactile
+Change Physical Footprint: Designator=C? Old Footprint=CAP 0402/1005 New Footprint=CAP 0402/1005
+Change Physical Footprint: Designator=C? Old Footprint=CAP 0402/1005 New Footprint=CAP 0402/1005
+Change Physical Footprint: Designator=L? Old Footprint=4_7 New Footprint=4_7
+Change Physical Footprint: Designator=P? Old Footprint=Battery_clip New Footprint=Battery_clip
+Change Physical Footprint: Designator=Q? Old Footprint=SOT23 New Footprint=SOT23
+Change Physical Footprint: Designator=U? Old Footprint=SOT65P210X110-6N New Footprint=SOT65P210X110-6N
+Change Physical Footprint: Designator=U? Old Footprint=20M1_N New Footprint=20M1_N

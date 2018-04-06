@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: Q:\Alitium\PCB_design_manufacture_bag_tag\bag_alamr_v1.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=bag_alamr_v1.txt|DrillLayers=gtl,g1,g2,gbl
+LayersSetName=GND_Bot_Blind_Vias|DrillFile=bag_alamr_v1.tx1|DrillLayers=g1,g2,gbl

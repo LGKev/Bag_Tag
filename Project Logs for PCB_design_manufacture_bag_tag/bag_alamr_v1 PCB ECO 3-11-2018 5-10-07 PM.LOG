@@ -1,0 +1,22 @@
+Change Component Designator: OldDesignator=C? NewDesignator=C1
+Change Component Designator: OldDesignator=C? NewDesignator=C2
+Change Component Designator: OldDesignator=J? NewDesignator=J1
+Change Component Designator: OldDesignator=L? NewDesignator=L1
+Change Component Designator: OldDesignator=P? NewDesignator=P1
+Change Component Designator: OldDesignator=Q? NewDesignator=Q1
+Change Component Designator: OldDesignator=R? NewDesignator=R1
+Change Component Designator: OldDesignator=U? NewDesignator=U1
+Change Component Designator: OldDesignator=U? NewDesignator=U3
+Added Component: Designator=U2(QFN20L/5x5)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0603"; VariantName = "[No Variations]"
+Change Net Name : Old Net Name=NetC?_2 New Net Name=NetC2_2
+Change Net Name : Old Net Name=NetJ?_1 New Net Name=NetJ1_1
+Change Net Name : Old Net Name=NetJ?_2 New Net Name=NetJ1_2
+Change Net Name : Old Net Name=NetJ?_3 New Net Name=NetJ1_3
+Change Net Name : Old Net Name=NetJ?_4 New Net Name=NetJ1_4
+Change Net Name : Old Net Name=NetJ?_5 New Net Name=NetJ1_5
+Change Net Name : Old Net Name=NetL?_2 New Net Name=NetL1_2
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C2 10uF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component U2 NRF24L01
+Added Member To Class: ClassName=bag_tag_v1 Member=Component U3 atmeag328p

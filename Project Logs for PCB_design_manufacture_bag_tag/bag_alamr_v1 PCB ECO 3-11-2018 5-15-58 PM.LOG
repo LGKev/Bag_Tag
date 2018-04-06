@@ -1,0 +1,112 @@
+Removed Member From Class: ClassName=bag_tag_v1 Member=U2
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=C?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=L?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=L?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=L?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=R?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=R?(0402s)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0402"; VariantName = "[No Variations]"
+Added Component: Designator=U?(QFN20L/5x5)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Part Field 1"; Value = "0603"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=C?-1
+Added Pin To Net: NetName=GND Pin=C?-1
+Added Pin To Net: NetName=GND Pin=C?-1
+Added Pin To Net: NetName=GND Pin=C?-2
+Added Pin To Net: NetName=GND Pin=C?-2
+Added Pin To Net: NetName=GND Pin=C?-2
+Added Pin To Net: NetName=GND Pin=C?-2
+Added Pin To Net: NetName=GND Pin=C?-2
+Added Pin To Net: NetName=GND Pin=R?-2
+Added Pin To Net: NetName=GND Pin=U?-8
+Added Pin To Net: NetName=GND Pin=U?-14
+Added Pin To Net: NetName=GND Pin=U?-17
+Added Pin To Net: NetName=GND Pin=U?-20
+Added Pin To Net: NetName=CE Pin=U?-1
+Added Net: Name=CE
+Added Pin To Net: NetName=CSN Pin=U?-2
+Added Net: Name=CSN
+Added Pin To Net: NetName=IRQ Pin=U?-6
+Added Net: Name=IRQ
+Added Pin To Net: NetName=MISO Pin=U?-5
+Added Net: Name=MISO
+Added Pin To Net: NetName=MOSI Pin=U?-4
+Added Net: Name=MOSI
+Added Pin To Net: NetName=NetC?_1 Pin=C?-1
+Added Pin To Net: NetName=NetC?_1 Pin=C?-1
+Added Net: Name=NetC?_1
+Added Pin To Net: NetName=NetC?_2 Pin=C?-2
+Added Pin To Net: NetName=NetC?_2 Pin=C?-2
+Added Pin To Net: NetName=NetC?_2 Pin=L?-1
+Added Pin To Net: NetName=NetC?_2 Pin=U?-11
+Added Net: Name=NetC?_2
+Added Pin To Net: NetName=NetL?_1 Pin=L?-1
+Added Pin To Net: NetName=NetL?_1 Pin=L?-1
+Added Pin To Net: NetName=NetL?_1 Pin=U?-13
+Added Net: Name=NetL?_1
+Added Pin To Net: NetName=NetL?_2 Pin=L?-2
+Added Pin To Net: NetName=NetL?_2 Pin=L?-2
+Added Pin To Net: NetName=NetL?_2 Pin=U?-12
+Added Net: Name=NetL?_2
+Added Pin To Net: NetName=NetR?_1 Pin=R?-1
+Added Pin To Net: NetName=NetR?_1 Pin=U?-16
+Added Net: Name=NetR?_1
+Added Pin To Net: NetName=SCK Pin=U?-3
+Added Net: Name=SCK
+Added Pin To Net: NetName=VDD Pin=C?-1
+Added Pin To Net: NetName=VDD Pin=C?-1
+Added Pin To Net: NetName=VDD Pin=U?-7
+Added Pin To Net: NetName=VDD Pin=U?-15
+Added Pin To Net: NetName=VDD Pin=U?-18
+Added Net: Name=VDD
+Added Net: Name=VSS
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 15pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 10nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 15pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 1nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 33nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 2.2nF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 4.7pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 1.0pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component C? 1.5pF
+Added Member To Class: ClassName=bag_tag_v1 Member=Component L? 6.8nH
+Added Member To Class: ClassName=bag_tag_v1 Member=Component L? 3.3nH
+Added Member To Class: ClassName=bag_tag_v1 Member=Component L? 3.9nH
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R? 1M
+Added Member To Class: ClassName=bag_tag_v1 Member=Component R? 22K
+Added Member To Class: ClassName=bag_tag_v1 Member=Component U? NRF24L01

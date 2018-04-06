@@ -1,0 +1,28 @@
+Change Physical Footprint: Designator=ant1 Old Footprint=2.4ghz ANT_ New Footprint=2.4ghz ANT_
+Change Physical Footprint: Designator=C1 Old Footprint=CAP 0603/1608 New Footprint=CAP 0603/1608
+Change Physical Footprint: Designator=C2 Old Footprint=CAP 0603/1608 New Footprint=CAP 0603/1608
+Change Physical Footprint: Designator=C3 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C4 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C5 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C6 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C7 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C8 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C9 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C10 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C11 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=C13 Old Footprint=CAP 0603/1608 New Footprint=CAP 0603/1608
+Change Physical Footprint: Designator=C14 Old Footprint=CAP 0603/1608 New Footprint=CAP 0603/1608
+Change Physical Footprint: Designator=C16 Old Footprint=CAP 0603/1608 New Footprint=CAP 0603/1608
+Change Physical Footprint: Designator=D? Old Footprint=PLCC2_REVMOUNT New Footprint=PLCC2_REVMOUNT
+Change Physical Footprint: Designator=L1 Old Footprint=4_7 New Footprint=4_7
+Change Physical Footprint: Designator=L2 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=L3 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=L4 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=P1 Old Footprint=Battery_clip New Footprint=Battery_clip
+Change Physical Footprint: Designator=R2 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=R3 Old Footprint=0402s New Footprint=0402s
+Change Physical Footprint: Designator=U1 Old Footprint=SOT65P210X110-6N New Footprint=SOT65P210X110-6N
+Change Physical Footprint: Designator=U2 Old Footprint=QFN20L/5x5 New Footprint=QFN20L/5x5
+Change Physical Footprint: Designator=U3 Old Footprint=yy] New Footprint=yy]
+Change Physical Footprint: Designator=U? Old Footprint=QFN50P200X200X100-12N New Footprint=QFN50P200X200X100-12N
+Change Physical Footprint: Designator=Y? Old Footprint=OSCSC320X250X100N New Footprint=OSCSC320X250X100N

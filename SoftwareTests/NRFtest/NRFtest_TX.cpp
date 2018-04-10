@@ -22,3 +22,49 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#include <SPI.h>   
+#include "RF24.h"  
+
+RF24 myRadioTX(7, 8); // CE, CS Pins
+
+byte addresses[][6] = {"1Node"}; // Create address for 1 pipe.
+int dataTransmitted;  // Data that will be Transmitted from the transmitter
+
+void setup(){
+	myRadioTX.begin();
+	myRadioTX.setChannel(108); //2.508 Ghz
+   // Set the PA Level low to prevent power supply related issues since this is a
+  // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
+  myRadio.setPALevel(RF24_PA_MIN); //testing
+ // myRadio.setPALevel(RF24_PA_MAX);
+  myRadio.openWritingPipe( addresses[0]); 
+  delay(1000); 
+ 
+}
+
+int i = 0;
+
+void loop(){
+
+	
+	if(i >= 100){
+		i = 0; ///reset data
+	}
+	
+	myRadio.write( &dataTransmitted, sizeof(i) ); //start at 0 go to 100
+	delay(1000);
+	i++;
+}
+
+
+/*
+
+      radio.read( &myData, sizeof(myData) );             // Get the data
+myData holds the data its an address so no need to pass anyhting
+
+
+we are using a sytcut here so we can send multiple bytes 
+
+
+*/

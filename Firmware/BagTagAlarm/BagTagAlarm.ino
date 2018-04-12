@@ -53,8 +53,8 @@ SOFTWARE.
 #define BIT6 0b01000000
 #define BIT7 0b10000000
 
-#define ACCELEROMETER_AVG_COUNT 		5 //arbitrary averaging
-#define ACCELEROMETER_SENSITIVY_X		100 // again arbitrarily chosen
+#define ACCELEROMETER_AVG_COUNT 		20 //arbitrary averaging
+#define ACCELEROMETER_SENSITIVY_X		250 // again arbitrarily chosen
 #define ACCELEROMETER_SENSITIVY_Y		5
 #define	ACCELEROMETER_SENSITIVY_Z		5
 
@@ -129,7 +129,10 @@ unsigned int old_X_average = 0;
 unsigned int old_Y_average = 0;
 unsigned int old_Z_average = 0;
 
-//bool SOUND_THE_ALARM = false; 
+byte SOUND_THE_ALARM = 255; 
+unsigned long currentTime = 0;
+unsigned long elapsedTime = 0;
+
 
 void loop(){
 	//reset
@@ -158,26 +161,26 @@ void loop(){
 	//if( (x_change> ACCELEROMETER_SENSITIVY_X ) || (y_change > ACCELEROMETER_SENSITIVY_Y) || (z_change > ACCELEROMETER_SENSITIVY_Z)){
 	if( x_change > ACCELEROMETER_SENSITIVY_X ){
 		digitalWrite(LED0_D2, HIGH);
-		delay(200);
+		delay(100);
 		digitalWrite(LED0_D2, LOW);
-		delay(1000);
+		delay(100);
 		
-		//SOUND_THE_ALARM = true;
+		SOUND_THE_ALARM = 1;
+		x_change = 0;
 	}
 	
-	/*
-	if(SOUND_THE_ALARM == true){
-		soundAlarm(2); //sound alarm for 2 seconds
-		SOUND_THE_ALARM = false;
+	
+	if(SOUND_THE_ALARM == 1){
+		soundAlarm(1000); //sound alarm for 2 seconds
+		SOUND_THE_ALARM = 255;
 	}
-	*/
+	
 	
 	
 	//update values;
 	old_X_average = x_measure;
 	old_Y_average = y_measure;
 	old_Z_average = z_measure;
-	
 }
 #endif
 
@@ -212,21 +215,22 @@ void loop(){
 	@input: duration = a byte to describe how long to sound alarm in seconds. 
 */
 void soundAlarm(byte duration){
+	bool durationUp = false;
+	currentTime = millis();
 	
-	PORTD |= BIT2; // on led
-
-	long startTime = millis();
-	long elapsedTime = 0;
-	while((elapsedTime - startTime) > (duration * 1000)){
-	PORTD |=BIT5; // turn on
+	while(durationUp == false){
+	PORTD |=BIT5; // turn on alarm
 	delayMicroseconds(125);
-	PORTD ^= ~(BIT5); //turn off
+	PORTD ^= (BIT5); //turn off
 	delayMicroseconds(125);
-	elapsedTime = millis(); //update how much time has gone by. 
+	
+	elapsedTime = millis() - currentTime; //update how much time has gone by. 
+		if(elapsedTime >= (duration)){
+			durationUp = true;
+				delay(1000); //let it settle
+			break;
+		}
 	}
-	
-	PORTD ^= ~BIT2; //off
-	delay(1000); //so we know its really off. 
 }	
 
 void heartBeat(){

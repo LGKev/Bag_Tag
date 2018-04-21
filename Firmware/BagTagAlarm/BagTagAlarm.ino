@@ -121,15 +121,43 @@ void setup(){
 
 
 #ifdef TEST_TIME_AVG
-int x, y, z;
-unsigned long startTime =0;
+
 void loop(){
-	
-	startTime = millis();
-	z = analogRead(ACCELEROMETER_Z);
-	//start timer
+	int z = 0;
+	//z = averageOverZ(25);
+	for(int i=0; i<20; i++){
+		z = analogRead(ACCELEROMETER_Z);
+	}
+	z = z/20;
+	while(analogRead(ACCELEROMETER_Z) > 715){
+		PORTD = 0x04;
+	}
+	PORTD = 0;
 }
-#end
+/*
+	give the time which to average over [mS]
+	, and return the average
+	
+	for the z axis. a steady voltage of 2.32 is observed in 1 orientation
+	this converts to 719 or around that.
+*/
+int averageOverZ(int timeAverageOver){
+	
+	unsigned long startTime = millis();
+	unsigned long elapsedTime = 0;
+	int z_count = 0;
+	int z = 0;
+
+	while(elapsedTime < 2500){ //1/4 second avg
+		z += analogRead(ACCELEROMETER_Z);
+		z_count++;
+		elapsedTime = millis() - startTime;
+	}
+		z = z / z_count;
+		return z;
+}
+
+#endif
 
 
 #ifdef TEST_ACCL_THRESH

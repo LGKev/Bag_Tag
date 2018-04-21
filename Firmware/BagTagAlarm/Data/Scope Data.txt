@@ -1,0 +1,129 @@
+/*
+
+	scope images used for the thresholds. how to know what to set as the threshold!
+	
+	channel 1 is yellow
+	channel 2 is red
+	
+*/
+
+scope images: starting at sds000001
+
+- sds000001.png is the taping of XY where yellow is the y and x is on red. channel 2. 
+
+
+well actually since the way my USB is setup. the first image will be sds0000006.
+
+measuring XY on channel 1 and channel 2 
+	max is 2.80 and 2.74 volts 
+	min is 1.96 and 1.92
+	I tapped the holder pretty hard. 
+	
+	
+	I want to do some persistence to see what the high's and lows could be while moving the device. also should monitor Z
+	
+
+sds0000007
+	did a peak detection on the signal. its quite noisy! yellow is the z
+	a slow motion of taking an object resulted in no large peak. 
+	
+
+sds0000008	
+	did a simulated movement of device as if i was walking? maybe but still not very noticible. 
+	maximum and minimum had about 850mV difference. 
+	the average motion in the y direction was bigger (purple channel 2).
+	
+	
+sds0000009
+	simulated big motions in Z and got a much larger swing. 
+	doing peak to peak measure its probably better.
+	
+sds00000011 
+	peak to peak on both ch1 and ch2
+	simulating picking up an object. with a horizontal scale of 500ms. so over a half a second measurement period?
+	
+	maybe it would be easier to do the average value and then if the value changes over a period of time longer than a few seconds
+	
+
+so a threshold in time and in accelerometer data. 
+
+
+image 12
+	did a long measurement period 5seconds per division. so i could see Y and Z 
+	got a peak to peak of about 2 volts for both channels at its max. 
+	
+image 13. completely still 
+	i can see some high frequency spikes
+	these can be removed with averaging. which is shown at a 100ms per division 
+	500mv
+	the peak to peak is 120mV! so averaging is a good way to go. 128 averages at 100ms 
+	
+	
+	
+	image 14
+now with less insane movement. as if i wasn't running but if i was holding the device steady myself. 
+1 second per division 
+
+image15
+	 averaging over 1024 samples with 500ms per division steady no stimulation
+	 we had 180mV peak to peak both channels so looks like many averages are required. 
+
+	 
+since the screen is 7 seconds wide at 500mS per div (14 squares) maybe a period of 7 seconds is a good way to define movement. 
+
+image16:
+	movement over same horizontal scale. 
+	YZ measures. 
+	slight movement. looks like 600mV on Y
+	
+image17 about 1.5V difference on both channels slight movement
+	same horizontal scale
+
+image 18
+	with a pick up of object
+	and trying to hold steady
+	got 1.3 V changes
+	
+
+image 19
+with digitalWrite I got a frequency of 133kHz 
+
+image 20
+trying to use delay (1) and port writes.
+I don't think i'm addressing the correct pin!
+
+def not addressing correct pin. but it is portD
+i also was facing brown out! or similar
+
+I have quite large voltage spikes. I turned up the current limit and the device doesn't reset. how did I know it was resetting?
+
+image 22 is what it looks like. 
+reset of about 300mS
+
+Maybe I am just not correctly flipping bits!
+I did PORTD = 0x0F; 
+and PORT = 0x00; 
+to force the bit to change. 
+this is image 12. we have a frequency of 2.67 Mhz
+
+so with 0b00000100 //bit 2
+that worked to turn on the led. and the fastest is 2.67 Mhz... not very fast for a 16Mhz device.... bootloader is burned though. 
+
+
+I think now we have a good idea of what the thresholds might be around. 
+
+if we do an average over 1 second 
+
+I am having a hard time measuring the loop time with a bit flip. 
+
+
+Lets take some more measruemnts:
+z is at 2.32 
+y is at 1.62v
+
+so lets focus on Z 2.32V
+
+2.32/3.3V *1024 is 719 or so. 
+if we had 200 mV range then thats 62 adc points.
+
+lets do a blink with millis

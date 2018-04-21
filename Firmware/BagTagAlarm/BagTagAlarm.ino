@@ -24,12 +24,18 @@ SOFTWARE.
 	
 */
 
+byte SOUND_THE_ALARM = 255; 
+unsigned long currentTime = 0;
+unsigned long elapsedTime = 0;
+
+
+
 #include "BagTagAlarm.h"
 //#include <Spi.h>
 //avr sleep 
 // avr eeprom
 
-#define LED0_D2			2
+#define LED0_D2			2	//
 #define NRF_POWER_RESET		A3	
 #define ACCELEROMETER_X		A0	
 #define	ACCELEROMETER_Y		A1	
@@ -63,10 +69,17 @@ SOFTWARE.
 /* ====================================================================== *//* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
 ///All of my defines for Testing	
-#define TEST_ACCL			//turns on an led if change in motion
+//#define TEST_ACCL			//turns on an led if change in motion
 //#define TEST_ALARM		//tests the alarm
 
 //#define TEST_SOLIDLED 		//I THINK WE HAVE A BUNCH OF RESETS.
+
+//#define TEST_BLINK_LED_ONLY	
+//#define TEST_LOOPTIME	// put the final code in this define to check to execution time of the loop. 
+
+//#define TEST_ACCL_THRESH //threshold tests to get analog values with scope.
+
+#define TEST_TIME_AVG		//averaging over a time period with millis()
 
 /* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
@@ -106,6 +119,53 @@ void setup(){
 	
 }
 
+
+#ifdef TEST_TIME_AVG
+int x, y, z;
+unsigned long startTime =0;
+void loop(){
+	
+	startTime = millis();
+	z = analogRead(ACCELEROMETER_Z);
+	//start timer
+}
+#end
+
+
+#ifdef TEST_ACCL_THRESH
+int x, y, z;
+void loop(){
+	//heartBeat(); // the XOR is an issue and I was having brown out. current limit is 5 amp now and the device is not resetting.
+	//delay(1);
+	//PORTD &= ~BIT2;
+	//delay(1);
+	
+	PORTD |= 0x04; //bit 2
+	 x = analogRead(ACCELEROMETER_X);
+	 y = analogRead(ACCELEROMETER_Y);
+	 z = analogRead(ACCELEROMETER_Z);
+	PORTD = 0x00;
+}
+#endif
+
+#ifdef TEST_LOOPTIME
+void loop(){
+	PORTD = 0b00000100; //bit 2?
+	PORTD = 0x00;
+} 
+#endif
+
+
+#ifdef TEST_BLINK_LED_ONLY
+void loop(){
+	digitalWrite(LED0_D2, HIGH);
+	delay(1000);
+	digitalWrite(LED0_D2, LOW);
+	delay(1000);
+}
+#endif
+
+
 #ifdef TEST_SOLIDLED
 void loop(){
 	while(1);
@@ -136,6 +196,9 @@ unsigned long elapsedTime = 0;
 
 void loop(){
 	//reset
+	
+	PORTD|= BIT2;
+	
 	x_measure = 0;
 	y_measure = 0;
 	z_measure = 0;
@@ -157,7 +220,7 @@ void loop(){
 	byte y_change = abs(y_measure - old_Y_average);
 	byte z_change = abs(z_measure - old_Z_average);
 	
-	//if bigger than threshold
+	//if bigger than threshold 	
 	//if( (x_change> ACCELEROMETER_SENSITIVY_X ) || (y_change > ACCELEROMETER_SENSITIVY_Y) || (z_change > ACCELEROMETER_SENSITIVY_Z)){
 	if( x_change > ACCELEROMETER_SENSITIVY_X ){
 		digitalWrite(LED0_D2, HIGH);
@@ -181,6 +244,8 @@ void loop(){
 	old_X_average = x_measure;
 	old_Y_average = y_measure;
 	old_Z_average = z_measure;
+	
+	PORTD &= ~BIT2; //FOR MEASURING THE LOOP
 }
 #endif
 

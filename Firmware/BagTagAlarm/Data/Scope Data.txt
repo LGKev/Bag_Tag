@@ -127,3 +127,11 @@ so lets focus on Z 2.32V
 if we had 200 mV range then thats 62 adc points.
 
 lets do a blink with millis
+
+/* building again today saturday*/
+Worked better with an average. and using UART helped debug faster.
+I was over flowing! there were 220 or so measurements in a given 25 mS period!
+and thus over flow easily seen by - integer values. fixed with unsigned long. 
+
+so now i have a way to measure over a time interval and average. pretty steady too. only varies by 1 or 2 ADC points. 
+

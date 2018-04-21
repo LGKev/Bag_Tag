@@ -80,6 +80,7 @@ unsigned long elapsedTime = 0;
 //#define TEST_ACCL_THRESH //threshold tests to get analog values with scope.
 
 #define TEST_TIME_AVG		//averaging over a time period with millis()
+#define UART_DEBUG 	// only useful on an uno. 
 
 /* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
@@ -99,6 +100,12 @@ void setup(){
 	digitalWrite(ACCELEROMETER_PWR_DOWN, LOW);	//NORMAL MODE, NOT SLEEP
 	digitalWrite(ACCELEROMETER_SELF_TEST, LOW); //NORMAL MODE
 
+	
+#ifdef UART_DEBUG
+Serial.begin(9600);
+Serial.println("test started");
+#endif
+	
 	//blink the led so we know code is running
 	for(int i=0; i < 10; i++){
 		digitalWrite(LED0_D2, HIGH);
@@ -123,16 +130,43 @@ void setup(){
 #ifdef TEST_TIME_AVG
 
 void loop(){
-	int z = 0;
-	//z = averageOverZ(25);
-	for(int i=0; i<20; i++){
-		z = analogRead(ACCELEROMETER_Z);
-	}
-	z = z/20;
-	while(analogRead(ACCELEROMETER_Z) > 715){
-		PORTD = 0x04;
-	}
-	PORTD = 0;
+	int z_avg = 0;
+	z_avg = averageOverZ(50);
+	
+	int x_avg = 0;
+	x_avg = averageOverX(50);
+	
+	int y_avg = 0;
+	y_avg = averageOverY(50);
+
+
+	
+	
+	#ifdef UART_DEBUG
+	Serial.print("avgX: \t ");
+	Serial.print(x_avg);
+
+	Serial.print("  \t avgY: \t ");
+	Serial.print(y_avg);
+	
+	Serial.print(" \t avgZ: \t ");
+	Serial.print(z_avg);
+	
+	Serial.print("\t pure X: \t");
+	Serial.print(analogRead(ACCELEROMETER_X));
+	
+	Serial.print("\t pure Y: \t");
+	Serial.print(analogRead(ACCELEROMETER_Y));
+
+	Serial.print("\t pure Z: \t");
+	Serial.println(analogRead(ACCELEROMETER_Z));
+	
+	
+	
+	
+	#endif
+	//delay(1000);
+	
 }
 /*
 	give the time which to average over [mS]
@@ -146,14 +180,110 @@ int averageOverZ(int timeAverageOver){
 	unsigned long startTime = millis();
 	unsigned long elapsedTime = 0;
 	int z_count = 0;
-	int z = 0;
+	unsigned long z = 0;
 
-	while(elapsedTime < 2500){ //1/4 second avg
+	while(elapsedTime < timeAverageOver){ //1/4 second avg
 		z += analogRead(ACCELEROMETER_Z);
 		z_count++;
 		elapsedTime = millis() - startTime;
 	}
-		z = z / z_count;
+	
+	
+	#ifdef UART_DEBUG2
+	Serial.print("\t z sum:  \t");
+	Serial.print(z);
+	Serial.print("\t count \t");
+	Serial.println(z_count);
+	delay(500);
+	#endif
+	
+	z = z / z_count;
+		
+		
+	#ifdef UART_DEBUG2
+	
+	Serial.print("z  avg: \t");
+	Serial.println(z);
+	delay(500);
+	
+	#endif
+	
+	
+	return z;
+}
+
+int averageOverY(int timeAverageOver){
+	
+	unsigned long startTime = millis();
+	unsigned long elapsedTime = 0;
+	int y_count = 0;
+	unsigned long y = 0;
+
+	while(elapsedTime < timeAverageOver){ //1/4 second avg
+		y += analogRead(ACCELEROMETER_Y);
+		y_count++;
+		elapsedTime = millis() - startTime;
+	}
+	
+	
+	#ifdef UART_DEBUG2
+	Serial.print("\t y sum:  \t");
+	Serial.print(y);
+	Serial.print("\t count \t");
+	Serial.println(y_count);
+	delay(500);
+	#endif
+	
+	y = y / y_count;
+		
+		
+	#ifdef UART_DEBUG2
+	
+	Serial.print("y  avg: \t");
+	Serial.println(y);
+	delay(500);
+	
+	#endif
+	
+	
+		return y;
+}
+
+
+int averageOverX(int timeAverageOver){
+	
+	unsigned long startTime = millis();
+	unsigned long elapsedTime = 0;
+	int z_count = 0;
+	unsigned long z = 0;
+
+	while(elapsedTime < timeAverageOver){ //1/4 second avg
+		z += analogRead(ACCELEROMETER_X);
+		z_count++;
+		elapsedTime = millis() - startTime;
+	}
+	
+	
+	#ifdef UART_DEBUG2
+	Serial.print("\t X sum:  \t");
+	Serial.print(z);
+	Serial.print("\t count \t");
+	Serial.println(z_count);
+	delay(500);
+	#endif
+	
+	z = z / z_count;
+		
+		
+	#ifdef UART_DEBUG2
+	
+	Serial.print("z  avg: \t");
+	Serial.println(z);
+	delay(500);
+	
+	#endif
+	
+	
 		return z;
 }
 

@@ -143,13 +143,18 @@ void loop(){
 	Serial.print("avgX: \t ");
 	Serial.print(x_avg);
 	
+	Serial.print("\t return xyz: ");
+	Serial.println(alarmFromDeltaXYZ(300,200,10, 25));
 	
-	Serial.print("\t return X: \t");
-	Serial.print(	alarmFromDeltaX(100,300,3));//1 second movement, 2 second idle, and 3 ADC points of change required
-	Serial.print("\t return Y \t");
-	Serial.print(	alarmFromDeltaY(100,300,3));//1 second movement, 2 second idle, and 3 ADC points of change required
-	Serial.print("\t return Z: \t");
-	Serial.println(	alarmFromDeltaZ(100,300,3));//1 second movement, 2 second idle, and 3 ADC points of change required
+	
+	#ifdef TEST_INDIVIDUAL_AXIS_ALARM
+	Serial.print("\t return X: ");
+	Serial.print(	alarmFromDeltaX(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
+	Serial.print("\t return Y: ");
+	Serial.print(	alarmFromDeltaY(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
+	Serial.print("\t return Z: ");
+	Serial.println(	alarmFromDeltaZ(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
+	#endif
 	
 	#ifdef UART_DEBUG3
 	Serial.print("avgX: \t ");
@@ -184,6 +189,96 @@ void loop(){
 /* ================================================================================================*/
 // Alarm Trigger Functions
 /* ================================================================================================*/
+/*
+	//try to check all 3 axis at once instead of consecutively with independent timers
+	
+	use 1 timer for all 3 axis, should be more responsive 
+	
+*/
+byte  alarmFromDeltaXYZ(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity, byte average_mS){
+	unsigned long startTime = 0;
+	unsigned long elapsedTime = 0;
+
+	unsigned long deltaX = 0;
+		unsigned long deltaY = 0;
+			unsigned long deltaZ = 0;
+
+	unsigned long x_avg_first = averageOverX(average_mS); //50mS
+	unsigned long x_avg_second = averageOverX(average_mS);
+	unsigned long y_avg_first = averageOverY(average_mS); //average_mSmS
+	unsigned long y_avg_second = averageOverY(average_mS);
+	unsigned long z_avg_first = averageOverZ(average_mS); //average_mSmS
+	unsigned long z_avg_second = averageOverZ(average_mS);
+	
+	deltaX = abs(x_avg_first - x_avg_second);
+	deltaY = abs(y_avg_first - y_avg_second);
+	deltaZ = abs(z_avg_first - z_avg_second);
+
+	while(deltaX != 0 || deltaY != 0 || deltaZ != 0){
+		
+	while(deltaX >= sensitivity || deltaY >= sensitivity || deltaZ >= sensitivity){
+		if(startTime == 0 ){
+			startTime = millis();	
+		}
+		
+		x_avg_first = averageOverX(average_mS); //average_mSmS
+		x_avg_second = averageOverX(average_mS);
+		y_avg_first = averageOverY(average_mS); //average_mSmS
+		y_avg_second = averageOverY(average_mS);
+		z_avg_first = averageOverZ(average_mS); //average_mSmS
+		z_avg_second = averageOverZ(average_mS);
+		
+	deltaX = abs(x_avg_first - x_avg_second);
+	deltaY = abs(y_avg_first - y_avg_second);
+	deltaZ = abs(z_avg_first - z_avg_second);		
+	
+		elapsedTime = millis() - startTime;	
+		if(elapsedTime > allowableMovementTime_mS){
+			return 1;
+		}
+	}
+	
+	
+		x_avg_first = averageOverX(average_mS); //average_mSmS
+		x_avg_second = averageOverX(average_mS);
+		y_avg_first = averageOverY(average_mS); //average_mSmS
+		y_avg_second = averageOverY(average_mS);
+		z_avg_first = averageOverZ(average_mS); //average_mSmS
+		z_avg_second = averageOverZ(average_mS);
+		
+	deltaX = abs(x_avg_first - x_avg_second);
+	deltaY = abs(y_avg_first - y_avg_second);
+	deltaZ = abs(z_avg_first - z_avg_second);		
+
+	startTime = 0;
+	elapsedTime = 0;
+	while(deltaX < sensitivity &&  deltaY < sensitivity && deltaZ < sensitivity) {
+		if(startTime == 0 ){
+			startTime = millis();
+		}
+		
+		x_avg_first = averageOverX(average_mS); //average_mSmS
+		x_avg_second = averageOverX(average_mS);
+		y_avg_first = averageOverY(average_mS); //average_mSmS
+		y_avg_second = averageOverY(average_mS);
+		z_avg_first = averageOverZ(average_mS); //average_mSmS
+		z_avg_second = averageOverZ(average_mS);
+		
+	deltaX = abs(x_avg_first - x_avg_second);
+	deltaY = abs(y_avg_first - y_avg_second);
+	deltaZ = abs(z_avg_first - z_avg_second);		
+			
+		elapsedTime = millis() - startTime;
+		if(elapsedTime > idleTime_mS){
+			return 2;
+		}
+	}
+}
+	return 0;
+}
+
+
+
 
 /* 
 
@@ -201,7 +296,7 @@ void loop(){
 	idleTime_mS  = the time required for the sensor to be idle for alarm not to sound. [seconds]
 	
 */
-int  alarmFromDeltaX(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte xSensitivity){
+byte  alarmFromDeltaX(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte xSensitivity){
 	
 	unsigned long startTime = 0;
 	unsigned long elapsedTime = 0;
@@ -274,7 +369,7 @@ int  alarmFromDeltaX(unsigned long allowableMovementTime_mS, unsigned long idleT
 	idleTime_mS  = the time required for the sensor to be idle for alarm not to sound. [seconds]
 	
 */
-int  alarmFromDeltaY(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity){
+byte  alarmFromDeltaY(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity){
 	
 	unsigned long startTime = 0;
 	unsigned long elapsedTime = 0;
@@ -346,7 +441,7 @@ int  alarmFromDeltaY(unsigned long allowableMovementTime_mS, unsigned long idleT
 	idleTime_mS  = the time required for the sensor to be idle for alarm not to sound. [seconds]
 	
 */
-int  alarmFromDeltaZ(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity){
+byte  alarmFromDeltaZ(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity){
 	
 	unsigned long startTime = 0;
 	unsigned long elapsedTime = 0;

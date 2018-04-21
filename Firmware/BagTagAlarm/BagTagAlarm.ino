@@ -140,9 +140,18 @@ void loop(){
 	y_avg = averageOverY(50);
 
 
+	Serial.print("avgX: \t ");
+	Serial.print(x_avg);
 	
 	
-	#ifdef UART_DEBUG
+	Serial.print("\t return X: \t");
+	Serial.print(	alarmFromDeltaX(100,300,3));//1 second movement, 2 second idle, and 3 ADC points of change required
+	Serial.print("\t return Y \t");
+	Serial.print(	alarmFromDeltaY(100,300,3));//1 second movement, 2 second idle, and 3 ADC points of change required
+	Serial.print("\t return Z: \t");
+	Serial.println(	alarmFromDeltaZ(100,300,3));//1 second movement, 2 second idle, and 3 ADC points of change required
+	
+	#ifdef UART_DEBUG3
 	Serial.print("avgX: \t ");
 	Serial.print(x_avg);
 
@@ -168,6 +177,237 @@ void loop(){
 	//delay(1000);
 	
 }
+
+
+
+
+/* ================================================================================================*/
+// Alarm Trigger Functions
+/* ================================================================================================*/
+
+/* 
+
+			X
+			
+			
+	get the change in X, over a period of time and return a 1 if alarm should sound
+	return 0 if alarm should not sound.
+	
+	inputs: allowableMovementTime_mS [milliseconds] how long it can move
+	 ie 2 seconds, if moment persists for more than 2 seconds alarm sounds.
+	xSensitivity 1 being only allow 1 ADC point difference_type
+	3 being allow 3 ADC point differences. 
+	
+	idleTime_mS  = the time required for the sensor to be idle for alarm not to sound. [seconds]
+	
+*/
+int  alarmFromDeltaX(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte xSensitivity){
+	
+	unsigned long startTime = 0;
+	unsigned long elapsedTime = 0;
+	
+	//unsigned long allowableMovementTime_mS = allowableMovementTime_S * 1000;
+	//unsigned long idleTime_mS = idleTime_S * 1000;
+
+	
+	unsigned long deltaX = 0;
+	unsigned long x_avg_first = averageOverX(50); //50mS
+	unsigned long x_avg_second = averageOverX(50);
+	
+	deltaX = abs(x_avg_first - x_avg_second);
+	while(deltaX != 0){
+		
+	while(deltaX >= xSensitivity){
+		if(startTime == 0 ){
+			startTime = millis();	
+		}
+		
+		x_avg_first = averageOverX(50); //50mS
+		x_avg_second = averageOverX(50);
+	  
+	  	deltaX = abs(x_avg_first - x_avg_second);
+		
+		elapsedTime = millis() - startTime;
+		
+		if(elapsedTime > allowableMovementTime_mS){
+			return 1;
+		}
+	}
+	
+	
+	x_avg_first = averageOverX(50); //50mS
+	x_avg_second = averageOverX(50);
+	deltaX = abs(x_avg_first - x_avg_second);
+	startTime = 0;
+	elapsedTime = 0;
+	while(deltaX < xSensitivity){
+		if(startTime == 0 ){
+			startTime = millis();
+		}
+		
+		x_avg_first = averageOverX(50);
+		x_avg_second = averageOverX(50);
+		
+		deltaX = abs(x_avg_first - x_avg_second);
+		
+		elapsedTime = millis() - startTime;
+		if(elapsedTime > idleTime_mS){
+			return 0;
+		}
+	}
+}
+	return 53;
+}
+
+/*
+				Y
+				
+				
+	get the change in X, over a period of time and return a 1 if alarm should sound
+	return 0 if alarm should not sound.
+	
+	inputs: allowableMovementTime_mS [milliseconds] how long it can move
+	 ie 2 seconds, if moment persists for more than 2 seconds alarm sounds.
+	xSensitivity 1 being only allow 1 ADC point difference_type
+	3 being allow 3 ADC point differences. 
+	
+	idleTime_mS  = the time required for the sensor to be idle for alarm not to sound. [seconds]
+	
+*/
+int  alarmFromDeltaY(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity){
+	
+	unsigned long startTime = 0;
+	unsigned long elapsedTime = 0;
+	
+	//unsigned long allowableMovementTime_mS = allowableMovementTime_S * 1000;
+	//unsigned long idleTime_mS = idleTime_S * 1000;
+
+	
+	unsigned long deltaY = 0;
+	unsigned long y_avg_first = averageOverY(50); //50mS
+	unsigned long y_avg_second = averageOverY(50);
+	
+	deltaY = abs(y_avg_first - y_avg_second);
+	while(deltaY != 0){
+		
+	while(deltaY >= sensitivity){
+		if(startTime == 0 ){
+			startTime = millis();	
+		}
+		
+		y_avg_first = averageOverX(50); //50mS
+		y_avg_second = averageOverX(50);
+	  
+	  	deltaY = abs(y_avg_first - y_avg_second);
+		
+		elapsedTime = millis() - startTime;
+		
+		if(elapsedTime > allowableMovementTime_mS){
+			return 1;
+		}
+	}
+	
+	
+	y_avg_first = averageOverX(50); //50mS
+	y_avg_second = averageOverX(50);
+	deltaY = abs(y_avg_first - y_avg_second);
+	startTime = 0;
+	elapsedTime = 0;
+	while(deltaY < sensitivity){
+		if(startTime == 0 ){
+			startTime = millis();
+		}
+		
+		y_avg_first = averageOverX(50);
+		y_avg_second = averageOverX(50);
+		
+		deltaY = abs(y_avg_first - y_avg_second);
+		
+		elapsedTime = millis() - startTime;
+		if(elapsedTime > idleTime_mS){
+			return 0;
+		}
+	}
+}
+	return 54;
+}
+
+/* 				Z
+
+
+	get the change in X, over a period of time and return a 1 if alarm should sound
+	return 0 if alarm should not sound.
+	
+	inputs: allowableMovementTime_mS [milliseconds] how long it can move
+	 ie 2 seconds, if moment persists for more than 2 seconds alarm sounds.
+	xSensitivity 1 being only allow 1 ADC point difference_type
+	3 being allow 3 ADC point differences. 
+	
+	idleTime_mS  = the time required for the sensor to be idle for alarm not to sound. [seconds]
+	
+*/
+int  alarmFromDeltaZ(unsigned long allowableMovementTime_mS, unsigned long idleTime_mS, byte sensitivity){
+	
+	unsigned long startTime = 0;
+	unsigned long elapsedTime = 0;
+	
+	//unsigned long allowableMovementTime_mS = allowableMovementTime_S * 1000;
+	//unsigned long idleTime_mS = idleTime_S * 1000;
+
+	
+	unsigned long deltaZ = 0;
+	unsigned long z_avg_first = averageOverX(50); //50mS
+	unsigned long z_avg_second = averageOverX(50);
+	
+	deltaZ = abs(z_avg_first - z_avg_second);
+	while(deltaZ != 0){
+		
+	while(deltaZ >= sensitivity){
+		if(startTime == 0 ){
+			startTime = millis();	
+		}
+		
+		z_avg_first = averageOverX(50); //50mS
+		z_avg_second = averageOverX(50);
+	  
+	  	deltaZ = abs(z_avg_first - z_avg_second);
+		
+		elapsedTime = millis() - startTime;
+		
+		if(elapsedTime > allowableMovementTime_mS){
+			return 1;
+		}
+	}
+	
+	
+	z_avg_first = averageOverX(50); //50mS
+	z_avg_second = averageOverX(50);
+	deltaZ = abs(z_avg_first - z_avg_second);
+	startTime = 0;
+	elapsedTime = 0;
+	while(deltaZ < sensitivity){
+		if(startTime == 0 ){
+			startTime = millis();
+		}
+		
+		z_avg_first = averageOverX(50);
+		z_avg_second = averageOverX(50);
+		
+		deltaZ = abs(z_avg_first - z_avg_second);
+		
+		elapsedTime = millis() - startTime;
+		if(elapsedTime > idleTime_mS){
+			return 0;
+		}
+	}
+}
+	return 55;
+}
+
+/* ================================================================================================*/
+// averaging functions
+/* ================================================================================================*/
+
 /*
 	give the time which to average over [mS]
 	, and return the average

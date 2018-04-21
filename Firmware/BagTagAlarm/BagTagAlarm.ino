@@ -88,6 +88,8 @@ unsigned long elapsedTime = 0;
 
 void setup(){
 	pinMode(LED0_D2, OUTPUT);
+	
+	
 	pinMode(ALARM, OUTPUT); //equivently: DDRD|= 0b00100000; |= bit5;
 	pinMode(MAG_SWITCH, INPUT);
 	
@@ -123,7 +125,7 @@ Serial.println("test started");
 	while(1);
 	#endif
 	
-	
+	pinMode(13, OUTPUT);
 }
 
 
@@ -143,9 +145,19 @@ void loop(){
 	Serial.print("avgX: \t ");
 	Serial.print(x_avg);
 	
-	Serial.print("\t return xyz: ");
-	Serial.println(alarmFromDeltaXYZ(300,200,10, 25));
 	
+	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
+	
+	Serial.print("\t return xyz: ");
+	//Serial.println(alarmFromDeltaXYZ(250,1000,10, 10)); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
+	Serial.println(alarmValue); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
+
+	if(alarmValue == 1){
+		digitalWrite(13, HIGH);
+		delay(1000);
+	}
+	
+	digitalWrite(13, LOW);
 	
 	#ifdef TEST_INDIVIDUAL_AXIS_ALARM
 	Serial.print("\t return X: ");
@@ -200,8 +212,8 @@ byte  alarmFromDeltaXYZ(unsigned long allowableMovementTime_mS, unsigned long id
 	unsigned long elapsedTime = 0;
 
 	unsigned long deltaX = 0;
-		unsigned long deltaY = 0;
-			unsigned long deltaZ = 0;
+	unsigned long deltaY = 0;
+	unsigned long deltaZ = 0;
 
 	unsigned long x_avg_first = averageOverX(average_mS); //50mS
 	unsigned long x_avg_second = averageOverX(average_mS);
@@ -214,44 +226,7 @@ byte  alarmFromDeltaXYZ(unsigned long allowableMovementTime_mS, unsigned long id
 	deltaY = abs(y_avg_first - y_avg_second);
 	deltaZ = abs(z_avg_first - z_avg_second);
 
-	while(deltaX != 0 || deltaY != 0 || deltaZ != 0){
-		
-	while(deltaX >= sensitivity || deltaY >= sensitivity || deltaZ >= sensitivity){
-		if(startTime == 0 ){
-			startTime = millis();	
-		}
-		
-		x_avg_first = averageOverX(average_mS); //average_mSmS
-		x_avg_second = averageOverX(average_mS);
-		y_avg_first = averageOverY(average_mS); //average_mSmS
-		y_avg_second = averageOverY(average_mS);
-		z_avg_first = averageOverZ(average_mS); //average_mSmS
-		z_avg_second = averageOverZ(average_mS);
-		
-	deltaX = abs(x_avg_first - x_avg_second);
-	deltaY = abs(y_avg_first - y_avg_second);
-	deltaZ = abs(z_avg_first - z_avg_second);		
-	
-		elapsedTime = millis() - startTime;	
-		if(elapsedTime > allowableMovementTime_mS){
-			return 1;
-		}
-	}
-	
-	
-		x_avg_first = averageOverX(average_mS); //average_mSmS
-		x_avg_second = averageOverX(average_mS);
-		y_avg_first = averageOverY(average_mS); //average_mSmS
-		y_avg_second = averageOverY(average_mS);
-		z_avg_first = averageOverZ(average_mS); //average_mSmS
-		z_avg_second = averageOverZ(average_mS);
-		
-	deltaX = abs(x_avg_first - x_avg_second);
-	deltaY = abs(y_avg_first - y_avg_second);
-	deltaZ = abs(z_avg_first - z_avg_second);		
-
-	startTime = 0;
-	elapsedTime = 0;
+while(deltaX != 0 || deltaY != 0 || deltaZ != 0){
 	while(deltaX < sensitivity &&  deltaY < sensitivity && deltaZ < sensitivity) {
 		if(startTime == 0 ){
 			startTime = millis();
@@ -271,6 +246,42 @@ byte  alarmFromDeltaXYZ(unsigned long allowableMovementTime_mS, unsigned long id
 		elapsedTime = millis() - startTime;
 		if(elapsedTime > idleTime_mS){
 			return 2;
+		}
+	}
+
+
+		x_avg_first = averageOverX(average_mS); //average_mSmS
+		x_avg_second = averageOverX(average_mS);
+		y_avg_first = averageOverY(average_mS); //average_mSmS
+		y_avg_second = averageOverY(average_mS);
+		z_avg_first = averageOverZ(average_mS); //average_mSmS
+		z_avg_second = averageOverZ(average_mS);
+		
+	deltaX = abs(x_avg_first - x_avg_second);
+	deltaY = abs(y_avg_first - y_avg_second);
+	deltaZ = abs(z_avg_first - z_avg_second);		
+
+	startTime = 0;
+	elapsedTime = 0;
+	while(deltaX >= sensitivity || deltaY >= sensitivity || deltaZ >= sensitivity){
+		if(startTime == 0 ){
+			startTime = millis();	
+		}
+		
+		x_avg_first = averageOverX(average_mS); //average_mSmS
+		x_avg_second = averageOverX(average_mS);
+		y_avg_first = averageOverY(average_mS); //average_mSmS
+		y_avg_second = averageOverY(average_mS);
+		z_avg_first = averageOverZ(average_mS); //average_mSmS
+		z_avg_second = averageOverZ(average_mS);
+		
+	deltaX = abs(x_avg_first - x_avg_second);
+	deltaY = abs(y_avg_first - y_avg_second);
+	deltaZ = abs(z_avg_first - z_avg_second);		
+	
+		elapsedTime = millis() - startTime;	
+		if(elapsedTime > allowableMovementTime_mS){
+			return 1;
 		}
 	}
 }

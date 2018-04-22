@@ -79,9 +79,9 @@ unsigned long elapsedTime = 0;
 
 //#define TEST_ACCL_THRESH //threshold tests to get analog values with scope.
 
-//#define TEST_TIME_AVG		//averaging over a time period with millis()
+#define TEST_TIME_AVG		//averaging over a time period with millis()
 #define UART_DEBUG 	// only useful on an uno. 
-#define TEST_MAG_SWITCH
+//#define TEST_MAG_SWITCH
 
 //#define TEST_BITFLIP
 
@@ -712,7 +712,7 @@ unsigned int old_X_average = 0;
 unsigned int old_Y_average = 0;
 unsigned int old_Z_average = 0;
 
-byte SOUND_THE_ALARM = 255; 
+//byte SOUND_THE_ALARM = 255; 
 unsigned long currentTime = 0;
 unsigned long elapsedTime = 0;
 

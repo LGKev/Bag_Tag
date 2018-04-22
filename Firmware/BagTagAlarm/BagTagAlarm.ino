@@ -79,8 +79,13 @@ unsigned long elapsedTime = 0;
 
 //#define TEST_ACCL_THRESH //threshold tests to get analog values with scope.
 
-#define TEST_TIME_AVG		//averaging over a time period with millis()
+//#define TEST_TIME_AVG		//averaging over a time period with millis()
 #define UART_DEBUG 	// only useful on an uno. 
+#define TEST_MAG_SWITCH
+
+//#define TEST_BITFLIP
+
+//#define ALLOW_BUZZER //normally off while testing.
 
 /* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
@@ -92,6 +97,8 @@ void setup(){
 	
 	pinMode(ALARM, OUTPUT); //equivently: DDRD|= 0b00100000; |= bit5;
 	pinMode(MAG_SWITCH, INPUT);
+	digitalWrite(MAG_SWITCH, HIGH);
+
 	
 	pinMode(ACCELEROMETER_PWR_DOWN, OUTPUT);
 	pinMode(ACCELEROMETER_PWR_DOWN, OUTPUT);
@@ -128,19 +135,31 @@ Serial.println("test started");
 	pinMode(13, OUTPUT);
 }
 
+#ifdef TEST_MAG_SWITCH
+void loop(){
+	while(digitalRead(MAG_SWITCH) == HIGH){
+		digitalWrite(LED0_D2, HIGH);
+	}
+	
+		digitalWrite(LED0_D2, LOW);
+	
+}
+#endif
 
 #ifdef TEST_TIME_AVG
 
 void loop(){
-	int z_avg = 0;
-	z_avg = averageOverZ(50);
 	
 	int x_avg = 0;
 	x_avg = averageOverX(50);
 	
+	#ifdef debug4
 	int y_avg = 0;
 	y_avg = averageOverY(50);
-
+	
+	int z_avg = 0;
+	z_avg = averageOverZ(50);
+	#endif
 
 	Serial.print("avgX: \t ");
 	Serial.print(x_avg);
@@ -154,7 +173,11 @@ void loop(){
 
 	if(alarmValue == 1){
 		digitalWrite(13, HIGH);
-		delay(1000);
+		{
+		#ifdef ALLOW_BUZZER 
+		soundAlarm(1000);
+		#endif
+		}
 	}
 	
 	digitalWrite(13, LOW);
@@ -186,10 +209,6 @@ void loop(){
 
 	Serial.print("\t pure Z: \t");
 	Serial.println(analogRead(ACCELEROMETER_Z));
-	
-	
-	
-	
 	#endif
 	//delay(1000);
 	
@@ -766,9 +785,9 @@ void loop(){
 #ifdef TEST_ALARM
 void loop(){
 	while(1){
-	PORTD |=BIT5; // turn on
+	PORTD |= BIT5; // turn on
 	delayMicroseconds(125);
-	PORTD ^= (BIT5); //turn off
+	PORTD &= ~(BIT5); //turn off
 	delayMicroseconds(125);//	heartBeat();
 	}
 }
@@ -783,28 +802,28 @@ void loop(){
 	uses a delay micro to create the alarm. 
 	@input: duration = a byte to describe how long to sound alarm in seconds. 
 */
-void soundAlarm(byte duration){
+void soundAlarm(unsigned long duration_mS){
 	bool durationUp = false;
-	currentTime = millis();
+	unsigned long startTime = 0;
+	unsigned long elapsedTime = 0;
 	
-	while(durationUp == false){
-	PORTD |=BIT5; // turn on alarm
-	delayMicroseconds(125);
-	PORTD ^= (BIT5); //turn off
-	delayMicroseconds(125);
-	
-	elapsedTime = millis() - currentTime; //update how much time has gone by. 
-		if(elapsedTime >= (duration)){
-			durationUp = true;
-				delay(1000); //let it settle
-			break;
+	while(elapsedTime < duration_mS){
+		if(startTime == 0){
+			startTime = millis();
 		}
+		
+	PORTD |= 0b100100; //led and the buzzer
+	delayMicroseconds(125);
+	PORTD &= ~0b100100;
+	delayMicroseconds(125);
+	
+	elapsedTime = millis() - startTime; //update how much time has gone by. 
 	}
 }	
 
 void heartBeat(){
 	PORTD |= BIT2;
 	delay(250);
-	PORTD ^= ~BIT2;
+	PORTD &= ~BIT2;
 	delay(250);
 }

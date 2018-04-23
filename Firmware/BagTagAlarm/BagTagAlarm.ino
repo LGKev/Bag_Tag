@@ -41,11 +41,11 @@ do user interface for computer.
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-//avr sleep 
+//avr sleep //TODO
 // avr eeprom
 
 #define LED0_D2			2	//
-#define NRF_POWER_RESET		A3	
+#define NRF_POWER_RESET		17 //ADC3 is digitalpin 17.	
 #define ACCELEROMETER_X		A0	
 #define	ACCELEROMETER_Y		A1	
 #define ACCELEROMETER_Z		A2
@@ -88,23 +88,28 @@ do user interface for computer.
 
 //#define TEST_ACCL_THRESH //threshold tests to get analog values with scope.
 
-#define TEST_TIME_AVG		//averaging over a time period with millis()
-#define UART_DEBUG 	// only useful on an uno. 
+//#define TEST_TIME_AVG		//averaging over a time period with millis()
+//#define UART_DEBUG 	// only useful on an uno. 
 //#define TEST_MAG_SWITCH
 
 //#define TEST_BITFLIP
 
 //#define ALLOW_BUZZER //normally off while testing.
 
+#define TEST_RADIO_REMOTE
+
 /* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
 
+RF24 bagTagRadio(NRF_CE, NRF_CSN); // CE, CSN
+const byte address[6] = "00001";
 
 void setup(){
+	
+	
 	pinMode(LED0_D2, OUTPUT);
 	
-	
-	pinMode(ALARM, OUTPUT); //equivently: DDRD|= 0b00100000; |= bit5;
+	pinMode(ALARM, OUTPUT); //equivalently: DDRD|= 0b00100000; |= bit5;
 	pinMode(MAG_SWITCH, INPUT);
 	digitalWrite(MAG_SWITCH, HIGH);
 
@@ -136,42 +141,24 @@ Serial.println("test started");
 	digitalWrite(LED0_D2, LOW);
 	digitalWrite(ALARM, LOW);
 	
-	#ifdef TEST_SOLIDLED
-	digitalWrite(LED0_D2, HIGH);
-	while(1);
-	#endif
+	//Turn on the NRF
 	
-	pinMode(13, OUTPUT);
-}
-
-#ifdef TEST_MAG_SWITCH
-void loop(){
-	while(digitalRead(MAG_SWITCH) == HIGH){
-		digitalWrite(LED0_D2, HIGH);
-	}
-	
-		digitalWrite(LED0_D2, LOW);
+	pinMode(NRF_POWER_RESET, OUTPUT);
+	digitalWrite(NRF_POWER_RESET, HIGH);
+		
+	bagTagRadio.begin();
+	bagTagRadio.openReadingPipe(0, address);
+	bagTagRadio.setPALevel(RF24_PA_MAX);
+	bagTagRadio.startListening();
 	
 }
-#endif
 
-#ifdef TEST_TIME_AVG
 
+
+#ifdef MAIN_CODE
 void loop(){
 	
-	int x_avg = 0;
-	x_avg = averageOverX(50);
-	
-	#ifdef debug4
-	int y_avg = 0;
-	y_avg = averageOverY(50);
-	
-	int z_avg = 0;
-	z_avg = averageOverZ(50);
-	#endif
-
-	Serial.print("avgX: \t ");
-	Serial.print(x_avg);
+	/* Any Radio Traffic? */
 	
 	
 	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
@@ -184,6 +171,7 @@ void loop(){
 		digitalWrite(13, HIGH);
 		{
 		#ifdef ALLOW_BUZZER 
+		digitalWrite(13, HIGH);
 		soundAlarm(1000);
 		#endif
 		}
@@ -191,16 +179,17 @@ void loop(){
 	
 	digitalWrite(13, LOW);
 	
-	#ifdef TEST_INDIVIDUAL_AXIS_ALARM
-	Serial.print("\t return X: ");
-	Serial.print(	alarmFromDeltaX(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
-	Serial.print("\t return Y: ");
-	Serial.print(	alarmFromDeltaY(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
-	Serial.print("\t return Z: ");
-	Serial.println(	alarmFromDeltaZ(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
-	#endif
 	
-	#ifdef UART_DEBUG3
+#ifdef UART_DEBUG3
+	int x_avg = 0;
+	x_avg = averageOverX(50);
+	
+	int y_avg = 0;
+	y_avg = averageOverY(50);
+	
+	int z_avg = 0;
+	z_avg = averageOverZ(50);
+
 	Serial.print("avgX: \t ");
 	Serial.print(x_avg);
 
@@ -219,12 +208,26 @@ void loop(){
 	Serial.print("\t pure Z: \t");
 	Serial.println(analogRead(ACCELEROMETER_Z));
 	#endif
-	//delay(1000);
-	
 }
+#endif
 
 
 
+
+
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+
+//							All of the Helping Functions
+
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
 
 /* ================================================================================================*/
 // Alarm Trigger Functions
@@ -340,10 +343,6 @@ byte  alarmFromDeltaX(unsigned long allowableMovementTime_mS, unsigned long idle
 	unsigned long startTime = 0;
 	unsigned long elapsedTime = 0;
 	
-	//unsigned long allowableMovementTime_mS = allowableMovementTime_S * 1000;
-	//unsigned long idleTime_mS = idleTime_S * 1000;
-
-	
 	unsigned long deltaX = 0;
 	unsigned long x_avg_first = averageOverX(50); //50mS
 	unsigned long x_avg_second = averageOverX(50);
@@ -412,10 +411,6 @@ byte  alarmFromDeltaY(unsigned long allowableMovementTime_mS, unsigned long idle
 	
 	unsigned long startTime = 0;
 	unsigned long elapsedTime = 0;
-	
-	//unsigned long allowableMovementTime_mS = allowableMovementTime_S * 1000;
-	//unsigned long idleTime_mS = idleTime_S * 1000;
-
 	
 	unsigned long deltaY = 0;
 	unsigned long y_avg_first = averageOverY(50); //50mS
@@ -539,7 +534,7 @@ byte  alarmFromDeltaZ(unsigned long allowableMovementTime_mS, unsigned long idle
 }
 
 /* ================================================================================================*/
-// averaging functions
+// averaging functions for Accelerometer ADC 
 /* ================================================================================================*/
 
 /*
@@ -580,8 +575,7 @@ int averageOverZ(int timeAverageOver){
 	Serial.println(z);
 	delay(500);
 	
-	#endif
-	
+	#endif	
 	
 	return z;
 }
@@ -661,8 +655,185 @@ int averageOverX(int timeAverageOver){
 		return z;
 }
 
+
+/*
+	@name: soundalarm
+	@brief: will sound the piezeo buzzer with 50% duty cycle square wave with 4Khz. This produces the loudest alarm. 
+			Manual port manpulation to create the desired frequency
+	@Output:  PortD Pin5 is the buzzer
+	uses a delay micro to create the alarm. 
+	@input: duration = a byte to describe how long to sound alarm in seconds. 
+*/
+void soundAlarm(unsigned long duration_mS){
+	bool durationUp = false;
+	unsigned long startTime = 0;
+	unsigned long elapsedTime = 0;
+	
+	while(elapsedTime < duration_mS){
+		if(startTime == 0){
+			startTime = millis();
+		}
+		
+	PORTD |= 0b100100; //led and the buzzer
+	delayMicroseconds(125);
+	PORTD &= ~0b100100;
+	delayMicroseconds(125);
+	
+	elapsedTime = millis() - startTime; //update how much time has gone by. 
+	}
+}	
+
+void heartBeat(){
+	PORTD |= BIT2;
+	delay(250);
+	PORTD &= ~BIT2;
+	delay(250);
+}
+
+
+
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+
+//							All of the Various Tests
+// The defines at the top of this file will help in debugging, also shows how ideas were grown.
+
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+/* ================================================================================================*/
+
+/*
+	allow the alarm to trigger based on a remote signal. always on now power saving
+*/
+#ifdef TEST_RADIO_REMOTE 
+void loop(){
+	
+	
+	/* check for remote activity */
+	int valueReceived = 0xFF;
+	while(bagTagRadio.available()){
+		bagTagRadio.read(&valueReceived, sizeof(valueReceived));
+	}
+
+	if(valueReceived == 1){
+		soundAlarm(100);
+		valueReceived = 0xFF;
+	}
+	else if(valueReceived == 2){
+		digitalWrite(LED0_D2, HIGH);
+	}
+	else if(valueReceived == 0){
+		digitalWrite(LED0_D2, LOW);
+	}
+	
+	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
+	
+	Serial.print("\t return xyz: ");
+	//Serial.println(alarmFromDeltaXYZ(250,1000,10, 10)); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
+	Serial.println(alarmValue); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
+
+	
+	
+	if(alarmValue == 1){
+		digitalWrite(13, HIGH);
+		{
+		#ifdef ALLOW_BUZZER 
+		digitalWrite(13, HIGH);
+		soundAlarm(1000);
+		#endif
+		}
+	}
+}
 #endif
 
+
+#ifdef TEST_MAG_SWITCH
+void loop(){
+	while(digitalRead(MAG_SWITCH) == HIGH){
+		digitalWrite(LED0_D2, HIGH);
+	}
+	
+		digitalWrite(LED0_D2, LOW);
+	
+}
+#endif
+
+
+#ifdef TEST_TIME_AVG
+
+void loop()
+	
+	int x_avg = 0;
+	x_avg = averageOverX(50);
+	
+	#ifdef debug4
+	int y_avg = 0;
+	y_avg = averageOverY(50);
+	
+	int z_avg = 0;
+	z_avg = averageOverZ(50);
+	#endif
+
+	Serial.print("avgX: \t ");
+	Serial.print(x_avg);
+	
+	
+	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
+	
+	Serial.print("\t return xyz: ");
+	//Serial.println(alarmFromDeltaXYZ(250,1000,10, 10)); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
+	Serial.println(alarmValue); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
+
+	if(alarmValue == 1){
+		digitalWrite(13, HIGH);
+		{
+		#ifdef ALLOW_BUZZER 
+		soundAlarm(1000);
+		#endif
+		}
+	}
+	
+	digitalWrite(13, LOW);
+	
+	#ifdef TEST_INDIVIDUAL_AXIS_ALARM
+	Serial.print("\t return X: ");
+	Serial.print(	alarmFromDeltaX(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
+	Serial.print("\t return Y: ");
+	Serial.print(	alarmFromDeltaY(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
+	Serial.print("\t return Z: ");
+	Serial.println(	alarmFromDeltaZ(600,300,6));//1 second movement, 2 second idle, and 3 ADC points of change required
+	#endif
+	
+	#ifdef UART_DEBUG3
+	Serial.print("avgX: \t ");
+	Serial.print(x_avg);
+
+	Serial.print("  \t avgY: \t ");
+	Serial.print(y_avg);
+	
+	Serial.print(" \t avgZ: \t ");
+	Serial.print(z_avg);
+	
+	Serial.print("\t pure X: \t");
+	Serial.print(analogRead(ACCELEROMETER_X));
+	
+	Serial.print("\t pure Y: \t");
+	Serial.print(analogRead(ACCELEROMETER_Y));
+
+	Serial.print("\t pure Z: \t");
+	Serial.println(analogRead(ACCELEROMETER_Z));
+	#endif
+	//delay(1000);
+	
+}
+
+
+#endif
 
 #ifdef TEST_ACCL_THRESH
 int x, y, z;
@@ -698,11 +869,12 @@ void loop(){
 #endif
 
 
+
 #ifdef TEST_SOLIDLED
-void loop(){
+	digitalWrite(LED0_D2, HIGH);
 	while(1);
-}
 #endif
+
 
 
 /*
@@ -803,36 +975,4 @@ void loop(){
 
 #endif
 
-/*
-	@name: soundalarm
-	@brief: will sound the piezeo buzzer with 50% duty cycle square wave with 4Khz. This produces the loudest alarm. 
-			Manual port manpulation to create the desired frequency
-	@Output:  PortD Pin5 is the buzzer
-	uses a delay micro to create the alarm. 
-	@input: duration = a byte to describe how long to sound alarm in seconds. 
-*/
-void soundAlarm(unsigned long duration_mS){
-	bool durationUp = false;
-	unsigned long startTime = 0;
-	unsigned long elapsedTime = 0;
-	
-	while(elapsedTime < duration_mS){
-		if(startTime == 0){
-			startTime = millis();
-		}
-		
-	PORTD |= 0b100100; //led and the buzzer
-	delayMicroseconds(125);
-	PORTD &= ~0b100100;
-	delayMicroseconds(125);
-	
-	elapsedTime = millis() - startTime; //update how much time has gone by. 
-	}
-}	
 
-void heartBeat(){
-	PORTD |= BIT2;
-	delay(250);
-	PORTD &= ~BIT2;
-	delay(250);
-}

@@ -27,11 +27,20 @@ SOFTWARE.
 byte SOUND_THE_ALARM = 255; 
 unsigned long currentTime = 0;
 unsigned long elapsedTime = 0;
+/*
 
+http://forcetronic.blogspot.com/2016/07/using-nrf24l01s-irq-pin-to-generate.html
+
+check that out tomorrow.
+
+do user interface for computer. 
+*/
 
 
 #include "BagTagAlarm.h"
-//#include <Spi.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 //avr sleep 
 // avr eeprom
 

@@ -30,10 +30,18 @@ SOFTWARE.
 #include <nRF24L01.h>
 #include <RF24.h>
 
+#include "avr/wdt.h"
+
+#include "LowPower.h"
+#include "PinChangeInterrupt.h"
+
 byte SOUND_THE_ALARM = 255; 
 unsigned long currentTime = 0;
 unsigned long elapsedTime = 0;
 
+volatile byte arm_device_magSwitchISR = 0; // magSwitchISR sets this byte.
+
+volatile byte get_status = 0;
 
 /* ====================================================================== */
 /* ====================================================================== */
@@ -60,10 +68,6 @@ check that out tomorrow.
 
 do user interface for computer. 
 */
-
-
-//avr sleep //TODO
-// avr eeprom
 
 #define LED0_D2			2	//
 #define NRF_POWER_RESET		17 //ADC3 is digitalpin 17.	
@@ -121,8 +125,9 @@ do user interface for computer.
 //#define TEST_BITFLIP
 
 
-#define TEST_RADIO_REMOTE
-//#define MAIN_CODE
+//#define TEST_RADIO_REMOTE
+
+#define MAIN_CODE
 
 /* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
@@ -135,7 +140,7 @@ void setup(){
 	
 	pinMode(ALARM, OUTPUT); //equivalently: DDRD|= 0b00100000; |= bit5;
 	pinMode(MAG_SWITCH, INPUT);
-	digitalWrite(MAG_SWITCH, HIGH);
+	digitalWrite(MAG_SWITCH, HIGH); //should stay high on power down. 
 
 	
 	pinMode(ACCELEROMETER_PWR_DOWN, OUTPUT);
@@ -149,10 +154,6 @@ void setup(){
 	
 
 	
-#ifdef UART_DEBUG
-Serial.begin(9600);
-Serial.println("test started");
-#endif
 	
 	//blink the led so we know code is running
 	for(int i=0; i < 10; i++){
@@ -178,22 +179,81 @@ Serial.println("test started");
 	//bagTagRadio.setDataRate(RF24_250KBPS) ; 
 	//bagTagRadio.startListening();
 	 bagTagRadio.stopListening();
+	 
 
+	
+	
+	PCMSK2 |= 0b01000000; // pcint22 bit 6 pin change enable mask!
+	//disable by clearing that bit...
+	PCICR |= (0b100); //pin change interrupt control register. bit 2 for d6
+	sei(); //enable global interrupt
+	
 }
 
-
+volatile byte getStatus = 0;
 
 #ifdef MAIN_CODE
 void loop(){
 	
-	/* Any Radio Traffic? */
+	//LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
+	LowPower.powerDown(SLEEP_500MS, ADC_OFF, BOD_OFF);
+
+	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
+	if(alarmValue == 1){
+		digitalWrite(LED0_D2, HIGH);
+		delay(1000);
+	}
+	digitalWrite(LED0_D2, LOW);
+	
+	
+	
+	
+	while(arm_device_magSwitchISR == 1){
+		//VISUAL NOTIFICATION
+		for(int i =0; i<5; i++){
+		digitalWrite(LED0_D2, HIGH);
+		delay(10);
+		digitalWrite(LED0_D2, LOW);
+		delay(100);
+	LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
+	}
+}
+	/*
+	
+	if(get_status == 1){
+	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
+	wdt_reset();
+		if(alarmValue == 1){
+		digitalWrite(LED0_D2, HIGH);
+		wdt_disable();
+		{
+		#ifdef ALLOW_BUZZER 
+		digitalWrite(LED0_D2, HIGH);
+		soundAlarm(1000);
+		#endif
+		}
+	}
+	
+			digitalWrite(LED0_D2, LOW);
+			wdt_reset();
+
+	
+
+		for(int i =0; i<5; i++){
+		digitalWrite(LED0_D2, HIGH);
+		delay(10);
+		digitalWrite(LED0_D2, LOW);
+		delay(50);
+		wdt_reset();
+	
+		}
+		get_status = 0;
+	}
+	/*
 	
 	
 	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
 	
-	Serial.print("\t return xyz: ");
-	//Serial.println(alarmFromDeltaXYZ(250,1000,10, 10)); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
-	Serial.println(alarmValue); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
 
 	if(alarmValue == 1){
 		digitalWrite(13, HIGH);
@@ -206,42 +266,56 @@ void loop(){
 	}
 	
 	digitalWrite(13, LOW);
-	
-	
-#ifdef UART_DEBUG3
-	int x_avg = 0;
-	x_avg = averageOverX(50);
-	
-	int y_avg = 0;
-	y_avg = averageOverY(50);
-	
-	int z_avg = 0;
-	z_avg = averageOverZ(50);
-
-	Serial.print("avgX: \t ");
-	Serial.print(x_avg);
-
-	Serial.print("  \t avgY: \t ");
-	Serial.print(y_avg);
-	
-	Serial.print(" \t avgZ: \t ");
-	Serial.print(z_avg);
-	
-	Serial.print("\t pure X: \t");
-	Serial.print(analogRead(ACCELEROMETER_X));
-	
-	Serial.print("\t pure Y: \t");
-	Serial.print(analogRead(ACCELEROMETER_Y));
-
-	Serial.print("\t pure Z: \t");
-	Serial.println(analogRead(ACCELEROMETER_Z));
-	#endif
+	*/
+	/*
+			for(int i =0; i<5; i++){
+				
+		digitalWrite(LED0_D2, HIGH);
+		delay(10);
+		digitalWrite(LED0_D2, LOW);
+		delay(100);
+			}
+			
+			*/
 }
+
+
+
 #endif
 
 
-
-
+/*================================================================================================*/
+/* ======================================= ISRs ======================================= */
+/*================================================================================================*/
+ISR(PCINT_22){
+	if(	arm_device_magSwitchISR == 0){
+	arm_device_magSwitchISR = 1; //toggle state
+	get_status = 1;
+	}
+	
+	else if(arm_device_magSwitchISR == 1){
+	arm_device_magSwitchISR = 0;
+	}
+	else{
+		return;
+	}
+}
+/*
+ISR(WDT_vect){
+	if(arm_device_magSwitchISR == 0){
+		wdt_reset();
+	}
+	else{
+		get_status = 1;
+	}
+}
+*/
+/*void magSwitchISR(){
+	
+	arm_device_magSwitchISR = 1; //toggle state
+	
+}
+*/
 
 /* ================================================================================================*/
 /* ================================================================================================*/
@@ -286,7 +360,9 @@ byte  alarmFromDeltaXYZ(unsigned long allowableMovementTime_mS, unsigned long id
 	deltaZ = abs(z_avg_first - z_avg_second);
 
 while(deltaX != 0 || deltaY != 0 || deltaZ != 0){
+			wdt_reset();
 	while(deltaX < sensitivity &&  deltaY < sensitivity && deltaZ < sensitivity) {
+				wdt_reset();
 		if(startTime == 0 ){
 			startTime = millis();
 		}
@@ -323,6 +399,7 @@ while(deltaX != 0 || deltaY != 0 || deltaZ != 0){
 	startTime = 0;
 	elapsedTime = 0;
 	while(deltaX >= sensitivity || deltaY >= sensitivity || deltaZ >= sensitivity){
+				wdt_reset();
 		if(startTime == 0 ){
 			startTime = millis();	
 		}
@@ -340,6 +417,7 @@ while(deltaX != 0 || deltaY != 0 || deltaZ != 0){
 	
 		elapsedTime = millis() - startTime;	
 		if(elapsedTime > allowableMovementTime_mS){
+					wdt_reset();
 			return 1;
 		}
 	}

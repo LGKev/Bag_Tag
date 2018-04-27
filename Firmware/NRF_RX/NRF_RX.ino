@@ -1,5 +1,7 @@
-#define notfixed
-#ifdef notfixed
+#define TEST_BASIC
+
+
+#ifdef TEST_BASIC
 /*
 * Arduino Wireless Communication Tutorial
 *       Example 1 - Receiver Code
@@ -11,23 +13,52 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-RF24 radio(7, 8); // CE, CSN
+RF24 radio(9, 10); // CE, CSN
 const byte address[6] = "00001";
 void setup() {
   Serial.begin(9600);
-  Serial.println("RX alive UNO");
+  Serial.println("RX alive 1");
   radio.begin();
   radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
+  pinMode(2, OUTPUT);
+  digitalWrite(2, LOW);
+  
 }
+
+char valueRX[2] = "";
+char trashRX[32] = "";
 void loop() {
-  if (radio.available()) {
-    //char text[32] = "";
-    int valueRX = 0;
+	byte byteCounter = 0;
+  while (radio.available()) {
+    //int valueRX = 0;
+	if(byteCounter ==0){
     radio.read(&valueRX, sizeof(valueRX));
     Serial.println(valueRX);
+	}
+	radio.read(&trashRX, sizeof(trashRX));
+	byteCounter++;
   }
+  if(valueRX[0] == 'a'){
+digitalWrite(2, HIGH);
+ }
+  
+  if(valueRX[0] == 'b'){
+digitalWrite(2, LOW);
+  }
+  
+  if(valueRX[0] == 'M'){
+	  digitalWrite(2, HIGH);
+  }
+  
+  if(valueRX[0] == 'N'){
+	  digitalWrite(2, LOW);
+  }
+  
+  
+
+  
 }
 #endif
 

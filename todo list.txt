@@ -1,0 +1,18 @@
+stuff i need to do for my project:
+
+1) test the sleep interrupt wake up with the magnetic switch
+	ie activate a scheme to take measurments and wake up with WDT
+2) change mode with mag switch	
+	while mag switch in place, be sleeping
+	oh! ok WDT on longest possible on sleeping
+	or sleeping and on change of magnetic
+		then go into another mode that uses ADC for accl data collection
+3) if mag replaced and alarm did not tirgger
+	go back into deep sleep
+	and check magnet at very veyr long periods
+	
+4) if magnet removed
+	and adc finds a difference
+	sound alarm!
+	and use NRF to burst out radio signal
+	

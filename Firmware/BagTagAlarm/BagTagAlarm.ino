@@ -24,9 +24,34 @@ SOFTWARE.
 	
 */
 
+
+#include "BagTagAlarm.h"
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
 byte SOUND_THE_ALARM = 255; 
 unsigned long currentTime = 0;
 unsigned long elapsedTime = 0;
+
+
+/* ====================================================================== */
+/* ====================================================================== */
+/* ====================================================================== */
+						/* radio globals */
+char data[3]; //constant data size, sending alarm signal
+char characterRecieved = 0;
+RF24 bagTagRadio(NRF_CE, NRF_CSN); // CE, CSN
+const byte address[6] = "00001";
+
+
+
+
+/* ====================================================================== */
+
+
+
+
 /*
 
 http://forcetronic.blogspot.com/2016/07/using-nrf24l01s-irq-pin-to-generate.html
@@ -37,10 +62,6 @@ do user interface for computer.
 */
 
 
-#include "BagTagAlarm.h"
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
 //avr sleep //TODO
 // avr eeprom
 
@@ -78,6 +99,12 @@ do user interface for computer.
 /* ====================================================================== *//* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
 ///All of my defines for Testing	
+//#define ALLOW_BUZZER //normally off while testing. turn on for real test. 
+
+
+//#define TEST_TIME_AVG		//averaging over a time period with millis()
+
+
 //#define TEST_ACCL			//turns on an led if change in motion
 //#define TEST_ALARM		//tests the alarm
 
@@ -88,21 +115,18 @@ do user interface for computer.
 
 //#define TEST_ACCL_THRESH //threshold tests to get analog values with scope.
 
-//#define TEST_TIME_AVG		//averaging over a time period with millis()
 //#define UART_DEBUG 	// only useful on an uno. 
 //#define TEST_MAG_SWITCH
 
 //#define TEST_BITFLIP
 
-//#define ALLOW_BUZZER //normally off while testing.
 
 #define TEST_RADIO_REMOTE
+//#define MAIN_CODE
 
 /* ====================================================================== */
 /* ====================================================================== *//* ====================================================================== */
 
-RF24 bagTagRadio(NRF_CE, NRF_CSN); // CE, CSN
-const byte address[6] = "00001";
 
 void setup(){
 	
@@ -122,6 +146,7 @@ void setup(){
 	
 	digitalWrite(ACCELEROMETER_PWR_DOWN, LOW);	//NORMAL MODE, NOT SLEEP
 	digitalWrite(ACCELEROMETER_SELF_TEST, LOW); //NORMAL MODE
+	
 
 	
 #ifdef UART_DEBUG
@@ -147,10 +172,13 @@ Serial.println("test started");
 	digitalWrite(NRF_POWER_RESET, HIGH);
 		
 	bagTagRadio.begin();
-	bagTagRadio.openReadingPipe(0, address);
-	bagTagRadio.setPALevel(RF24_PA_MAX);
-	bagTagRadio.startListening();
-	
+//	bagTagRadio.openReadingPipe(0, address);
+	bagTagRadio.openWritingPipe(address);
+	bagTagRadio.setPALevel(RF24_PA_MIN);
+	//bagTagRadio.setDataRate(RF24_250KBPS) ; 
+	//bagTagRadio.startListening();
+	 bagTagRadio.stopListening();
+
 }
 
 
@@ -708,46 +736,24 @@ void heartBeat(){
 /* ================================================================================================*/
 
 /*
-	allow the alarm to trigger based on a remote signal. always on now power saving
+	allow the alarm to trigger based on a remote signal. always on now power saving\
+	
+	makes more sense to make the tag just transmit once when it move.s 
+	
+	this is that test. Make the computer the RX and make the tag the transmitter. 
+	
 */
-#ifdef TEST_RADIO_REMOTE 
+#ifdef TEST_RADIO_REMOTE
 void loop(){
-	
-	
-	/* check for remote activity */
-	int valueReceived = 0xFF;
-	while(bagTagRadio.available()){
-		bagTagRadio.read(&valueReceived, sizeof(valueReceived));
-	}
-
-	if(valueReceived == 1){
-		soundAlarm(100);
-		valueReceived = 0xFF;
-	}
-	else if(valueReceived == 2){
-		digitalWrite(LED0_D2, HIGH);
-	}
-	else if(valueReceived == 0){
-		digitalWrite(LED0_D2, LOW);
-	}
-	
-	byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25);
-	
-	Serial.print("\t return xyz: ");
-	//Serial.println(alarmFromDeltaXYZ(250,1000,10, 10)); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
-	Serial.println(alarmValue); //movement for 250 mS, 1 second stable - for false alarm, 10ADC point change, 25mS average
-
-	
-	
-	if(alarmValue == 1){
-		digitalWrite(13, HIGH);
-		{
-		#ifdef ALLOW_BUZZER 
-		digitalWrite(13, HIGH);
-		soundAlarm(1000);
-		#endif
-		}
-	}
+		//byte alarmValue = alarmFromDeltaXYZ(700,1000,10, 25); //returns 1, 2 or 0, 1 is only valid alarm.
+		
+		//if(alarmValue == 1){
+			data[0] = 'N';
+			bagTagRadio.write(&data, sizeof(data));
+	//	}
+		
+		data[0] = 'M';
+		bagTagRadio.write(&data, sizeof(data));
 }
 #endif
 
@@ -766,7 +772,7 @@ void loop(){
 
 #ifdef TEST_TIME_AVG
 
-void loop()
+void loop(){
 	
 	int x_avg = 0;
 	x_avg = averageOverX(50);
@@ -791,13 +797,13 @@ void loop()
 
 	if(alarmValue == 1){
 		digitalWrite(13, HIGH);
-		{
+		digitalWrite(LED0_D2, HIGH);
+		delay(2000);
 		#ifdef ALLOW_BUZZER 
 		soundAlarm(1000);
 		#endif
-		}
 	}
-	
+	digitalWrite(LED0_D2, LOW);
 	digitalWrite(13, LOW);
 	
 	#ifdef TEST_INDIVIDUAL_AXIS_ALARM
